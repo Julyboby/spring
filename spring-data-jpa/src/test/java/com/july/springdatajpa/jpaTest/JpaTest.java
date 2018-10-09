@@ -3,7 +3,6 @@ package com.july.springdatajpa.jpaTest;
 import com.july.springdatajpa.dao.IRoleDao;
 import com.july.springdatajpa.dao.IUserDao;
 import com.july.springdatajpa.dao.UserProjection;
-import com.july.springdatajpa.dao.UserSpecificationRepository;
 import com.july.springdatajpa.model.Role;
 import com.july.springdatajpa.model.User;
 import org.junit.Test;
@@ -29,9 +28,6 @@ public class JpaTest {
 
     @Autowired
     private IRoleDao roleDao;
-
-    @Autowired
-    private UserSpecificationRepository userSpecificationRepository;
 
     @Test
     @Transactional
@@ -110,7 +106,7 @@ public class JpaTest {
 
     @Test
     public void spec() {
-        List<User> users = userSpecificationRepository.findAll(new Specification<User>() {
+        List<User> users = userDao.findAll(new Specification<User>() {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 //root.get("name")表示获取name这个字段名称,like表示执行like查询,%小%表示值
@@ -127,4 +123,41 @@ public class JpaTest {
         }
     }
 
+    @Test
+    public void specification(){
+        Specification<User> s1 = new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                //root.get("name")表示获取name这个字段名称,like表示执行like查询,%小%表示值
+                Predicate p1 = criteriaBuilder.like(root.get("name"),"%小%");
+                //equal-->"="
+                Predicate p2 = criteriaBuilder.equal(root.get("age"),5);
+                //将一个查询条件联合起来之后返回Predicate对象
+                return criteriaBuilder.and(p1,p2);
+            }
+        };
+
+        Specification<User> s2 = new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                //root.get("name")表示获取name这个字段名称,like表示执行like查询,%小%表示值
+                Predicate p1 = criteriaBuilder.equal(root.get("id"),1);
+                //equal-->"="
+                Predicate p2 = criteriaBuilder.equal(root.get("id"),2);
+                //将一个查询条件联合起来之后返回Predicate对象
+                return criteriaBuilder.or(p1,p2);
+            }
+        };
+
+        //通过Specifications将两个Specification连接起来，第一个条件加where，第二个是and
+        List<User> users = userDao.findAll(Specification.where(s1).and(s2));
+        for (User user : users) {
+            System.out.println(user.getName());
+        }
+    }
+
+    @Test
+    public void Criteria(){
+
+    }
 }

@@ -3,10 +3,7 @@ package com.july.springdatajpa.dao;
 import com.july.springdatajpa.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.QueryHint;
@@ -16,7 +13,7 @@ import java.util.List;
 import static org.hibernate.jpa.QueryHints.HINT_COMMENT;
 
 @Transactional(rollbackOn = Exception.class)
-public interface IUserDao extends JpaRepository<User, Integer> {
+public interface IUserDao extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
 
     /**
      * @Description @Modifying说明该方法是修改操作
