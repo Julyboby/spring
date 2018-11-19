@@ -1,0 +1,6 @@
+DuckDemo\QuackBehavior.class
+DuckDemo\FlyBehavior.class
+DuckDemo\MallardDuck.class
+DuckDemo\impl\Quack.class
+DuckDemo\impl\FlyWithWings.class
+DuckDemo\Duck.class
